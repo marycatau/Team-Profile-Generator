@@ -2,63 +2,43 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
 const Engineer = require('./lib/Engineer.js');
-const generateMarkdown = require('./lib/generateMarkdown.js');
-const Manager = require('./lib/Manger.js');
+const Manager = require('./lib/Manager.js');
 const Intern = require('./lib/Intern.js');
-
-
-//initialize a new object
-const manager = new Manager();
-
-function addnewteammate(nextteamate){
-    switch (nextteamate){
-        case "Engineer": 
-            const engineer = new Engineer();
-            var next = engineer.askuserinput();
-            return next;
-
-        case "Intern":
-            const intern = new Intern();
-            var next = engineer.askuserinput();
-            return next;
-
-
-    
-    
-
-        }  
-}
-
+const endofhtml = `
+</div>
+</body>
+</html>
+`
 
 // TODO: Create a function to initialize app
 async function init() {
-    var isCreate = await Manager.askUserInputForManager();
-    if(!isCreate)
+    var markup = await Manager.askUserInputForManager(inquirer);
+    if(!markup)
         return;
-
+        
     while(await askIfAddTeammate()){
         var teammateType = await askTypeOfTeammate();        
         console.log(teammateType);
         //engineer or intern
         if(teammateType === "Engineer"){
             console.log('engineer');
-            await Engineer.askUserInputForEngineer();
+            var addmarkup = await Engineer.askUserInputForEngineer();
+            markup += addmarkup;
         }
         else{ //intern
             console.log('intern');
-            await Intern.askUserInputForintern();
+            var addMarkUp=await Intern.askUserInputForintern();
+            markup +=addMarkUp;
         }
     }
 
     //add end of html
-    console.log ('end of html');
-    const endofhtml = `
-    </div>
-  </body>
-</html>
-    `
+    markup += endofhtml;
+    console.log (markup);
+
  
-    fs.appendFileSync('index.html', endofhtml);
+    //fs.appendFileSync('index.html', endofhtml);
+    fs.writeFileSync('./dist/index.html', markup);
     console.log('created index.html file!');
   
 };
