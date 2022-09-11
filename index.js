@@ -1,16 +1,18 @@
-// TODO: Include packages needed for this application
+//Include packages needed for this application
 const fs = require('fs');
 const inquirer = require('inquirer');
+
 const Engineer = require('./lib/Engineer.js');
 const Manager = require('./lib/Manager.js');
 const Intern = require('./lib/Intern.js');
+
 const endofhtml = `
 </div>
 </body>
 </html>
 `
 
-// TODO: Create a function to initialize app
+//Create a function to initialize app
 async function init() {
     var markup = await Manager.askUserInputForManager(inquirer);
     if(!markup)
@@ -18,28 +20,25 @@ async function init() {
         
     while(await askIfAddTeammate()){
         var teammateType = await askTypeOfTeammate();        
-        console.log(teammateType);
+        //console.log(teammateType);
         //engineer or intern
         if(teammateType === "Engineer"){
-            console.log('engineer');
-            var addmarkup = await Engineer.askUserInputForEngineer();
+            //console.log('engineer');
+            var addmarkup = await Engineer.askUserInputForEngineer(inquirer);
             markup += addmarkup;
         }
         else{ //intern
-            console.log('intern');
-            var addMarkUp=await Intern.askUserInputForintern();
+            //console.log('intern');
+            var addMarkUp=await Intern.askUserInputForintern(inquirer);
             markup +=addMarkUp;
         }
     }
 
-    //add end of html
+    //add markup at end of html
     markup += endofhtml;
-    console.log (markup);
-
- 
-    //fs.appendFileSync('index.html', endofhtml);
+    //console.log (markup);
     fs.writeFileSync('./dist/index.html', markup);
-    console.log('created index.html file!');
+    console.log('Created index.html file!');
   
 };
 
@@ -50,7 +49,7 @@ async function askIfAddTeammate(){
         message: 'Do you need to add another teammate?',
       },
     ]);
-    console.log('isAddTeammate:'+isAddTeammate.addteammate);
+    //console.log('isAddTeammate:'+isAddTeammate.addteammate);
     return isAddTeammate.addteammate;
 }
 
